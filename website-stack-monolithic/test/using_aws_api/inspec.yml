@@ -1,0 +1,14 @@
+name: website_bucket
+title: Website S3 Bucket
+maintainer: Kief Morris
+copyright: Kief Morris
+copyright_email: infra@kief.com
+license: MIT
+summary: Define S3 bucket to use for a website
+version: 0.1.0
+description: Test the S3 bucket
+
+inputs:
+  - name: bucket_name
+    type: string
+    required: true
