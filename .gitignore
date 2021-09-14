@@ -1,4 +1,5 @@
 .*
 !.gitignore
+!.tool-versions
 my-*
 _work
