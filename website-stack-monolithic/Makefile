@@ -20,6 +20,7 @@ clean:
 
 validate: init ## Validate syntax
 	cd src && terraform validate
+	cd src && terraform fmt -check
 
 plan: init ## Show plan for apply
 	cd src && terraform plan -var-file=../$(STACK_CONFIG) -var-file=../$(PLATFORM_CONFIG)
