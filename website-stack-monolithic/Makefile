@@ -1,8 +1,10 @@
 .DEFAULT_GOAL := help
 
-STACK_CONFIG ?= my-stack-variables.tfvars
-PLATFORM_CONFIG ?= my-platform-variables.tfvars
-BACKEND_CONFIG ?= my-backend.hcl
+
+CONTEXT ?= local
+STACK_CONFIG ?= contexts/$(CONTEXT)-stack-variables.tfvars
+PLATFORM_CONFIG ?= contexts/$(CONTEXT)-platform-variables.tfvars
+BACKEND_CONFIG ?= contexts/$(CONTEXT)-backend.hcl
 include $(PLATFORM_CONFIG)
 include $(STACK_CONFIG)
 
