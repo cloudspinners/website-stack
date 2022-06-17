@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "website_bucket" {
-  bucket = var.bucket_name
+  bucket = local.bucket_name
   acl    = "public-read"
   policy = <<POLICY
 {
@@ -10,7 +10,7 @@ resource "aws_s3_bucket" "website_bucket" {
       "Effect":"Allow",
       "Principal": "*",
       "Action":["s3:GetObject"],
-      "Resource":["arn:aws:s3:::${var.bucket_name}/*"]
+      "Resource":["arn:aws:s3:::${local.bucket_name}/*"]
     }
   ]
 }

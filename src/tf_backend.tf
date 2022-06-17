@@ -3,7 +3,7 @@ terraform {
     hostname     = "app.terraform.io"
     organization = var.terraform_cloud_organization
     workspaces {
-      name = "spin-${var.instance_id}-s3_bucket-${var.bucket_name}"
+      name = "spin-${var.site_name}-s3_bucket-${var.instance_name}"
     }
   }
 }

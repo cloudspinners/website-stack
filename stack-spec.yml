@@ -1,0 +1,14 @@
+---
+stack_tool: terraform
+
+stack_instance_parameters:
+  - website_name
+  - instance_name
+  - unique_id
+
+platform:
+  name: aws
+  parameters:
+    - terraform_cloud_organization
+    - aws_region
+    - aws_profile
