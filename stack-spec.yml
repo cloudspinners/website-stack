@@ -1,5 +1,8 @@
 ---
-stack_tool: terraform
+stack_tool:
+  name: terraform
+  parameters:
+    - cloud_organization
 
 stack_instance_parameters:
   - website_name
@@ -9,6 +12,5 @@ stack_instance_parameters:
 platform:
   name: aws
   parameters:
-    - terraform_cloud_organization
     - aws_region
     - aws_profile

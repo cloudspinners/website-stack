@@ -1,0 +1,16 @@
+---
+stack_instance:
+  website_name: cloudspin.xyz
+  instance_name: kief.dev.cloudspin.xyz
+  unique_id: kief321
+
+platform:
+  aws:
+    aws_region: us-east-2
+    aws_profile: iac_site_manager
+
+stack_tool:
+  terraform:
+    backend: cloud
+    cloud_organization: spin-stacks
+    workspace: kief_sandbox
