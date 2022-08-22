@@ -1,6 +1,9 @@
 .*
 !.gitignore
 !.github
+!.gitkeep
 !.tool-versions
 */contexts/local-*
+test/volume/*
+!test/volume/.gitkeep
 _work

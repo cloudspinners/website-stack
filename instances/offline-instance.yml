@@ -1,0 +1,18 @@
+---
+stack_instance:
+  parameters:
+    website_name: cloudspin.xyz
+    instance_name: kief.dev.cloudspin.xyz
+    unique_id: kief321
+
+  platform:
+    name: localstack
+    parameters:
+      aws_region: us-east-2
+      access_key: dummy
+      secret_key: dummy
+
+  tool: 
+    name: terraform
+    backend:
+      name: local
