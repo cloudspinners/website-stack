@@ -25,4 +25,4 @@ jobs:
       -
         name: Run offline tests
         run: |
-          ./bin/dojo --docker-options="--platform linux/amd64" ./go test
+          ./bin/dojo "./go test"

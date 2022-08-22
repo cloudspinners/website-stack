@@ -49,7 +49,7 @@ while [ "$#" -ne 0 ] ; do
         test)
             echo "Running offline tests"
             stack-spin -i instances/offline-instance.yml validate || fail "validate failed"
-            stack-spin -i instances/offline-instance.yml plan || fail "plan failed"
+            # stack-spin -i instances/offline-instance.yml plan || fail "plan failed"
             # time bats ./test/bats || fail "offline bats tests failed"
             ;;
         help)
