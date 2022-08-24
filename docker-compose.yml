@@ -3,7 +3,12 @@ services:
   default:
     links:
       - localstack
+    environment:
+      - AWS_ACCESS_KEY_ID="test"
+      - AWS_SECRET_ACCESS_KEY="test"
+      - AWS_DEFAULT_REGION=us-east-1
   localstack:
+    container_name: "website_stack_localstack"
     image: localstack/localstack
     ports:
       - "127.0.0.1:4566:4566"            # LocalStack Gateway

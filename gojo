@@ -1,0 +1,23 @@
+#!/bin/bash
+
+set -euo pipefail
+
+if [ -z "${SPIN_TOOLS_VERSION:-}" ] ; then
+	>&2 echo "Not running in a spin docker image, run ./go instead"
+	exit 1
+fi
+
+for arg in "$@"
+do
+	case "$arg" in
+	test)
+		echo "Running tests"
+		time bats ./test/tests
+		;;
+	*)
+		echo "Usage: gojo [test]"
+		exit 0
+		;;
+	esac
+done
+

@@ -3,7 +3,8 @@
 !.github
 !.gitkeep
 !.tool-versions
-*/contexts/local-*
 test/volume/*
 !test/volume/.gitkeep
+docker-compose.yml.dojo
 _work
+_tmp

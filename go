@@ -5,12 +5,7 @@ set -euo pipefail
 ME=`basename $0`
 MYFULL=`readlink -f $0`
 MYDIR=`dirname $MYFULL`
-USAGE="USAGE: $ME <COMMAND>
-
-    COMMANDS:
-        test            Run local tests (using localstack)
-        help                        Print this message
-"
+USAGE="USAGE: $ME [update|dojo|dojodev|test|testdev|release]"
 
 warn()
 {
@@ -35,29 +30,50 @@ print_usage()
 }
 
 
-if [ "$#" -eq 0 ] ; then
-  fail "No command given"
+if [ -n "${SPIN_TOOLS_VERSION:-}" ] ; then
+    fail "Don't run this script inside a running spin docker image, run ./gojo instead"
 fi
 
-while [ "$#" -ne 0 ] ; do
-    COMMAND=$1
-    shift
-    case "$COMMAND" in
-        dojodev)
-            dojo -image kiefm/spin-tools-dojo:dev
-            ;;
-        test)
-            echo "Running offline tests"
-            stack-spin -i instances/offline-instance.yml validate || fail "validate failed"
-            # stack-spin -i instances/offline-instance.yml plan || fail "plan failed"
-            # time bats ./test/bats || fail "offline bats tests failed"
-            ;;
-        help)
-            echo "USAGE: $USAGE"
-            ;;
-         *)
-            fail "Unknown command '$COMMAND'."
-            ;;
-    esac
 
+if [ "$#" -eq 0 ] ; then
+    fail "No command given"
+fi
+
+for arg in "$@"
+do
+    case "$arg" in
+    update)
+        docker pull kiefm/spin-tools-dojo:latest
+        ;;
+    dojo)
+        docker pull kiefm/spin-tools-dojo:latest
+        dojo
+        ;;
+    dojodev)
+        dojo -image kiefm/spin-tools-dojo:localdev
+        ;;
+    test)
+        dojo "./gojo test"
+        ;;
+    testdev)
+        dojo -image kiefm/spin-tools-dojo:localdev "./gojo test"
+        ;;
+    version)
+        if [ -f CHANGELOG.md ] ; then
+            head -1 CHANGELOG.md | grep -o -e "[0-9]*\.[0-9]*\.[0-9]*"
+        else
+            fail "Can't get version, missing CHANGELOG.md"
+        fi
+        ;;
+    release)
+        do_release
+        ;;
+    help)
+        print_usage
+        ;;
+    *)
+        fail "Unknown command ${arg}"
+        ;;
+    esac
 done
+
