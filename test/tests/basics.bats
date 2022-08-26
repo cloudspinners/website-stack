@@ -22,13 +22,3 @@ load "${BATS_HELPER_DIR}/bats-assert/load.bash"
   echo "output: $output"
   assert_failure 2
 }
-
-@test "Can create and destroy the stack in localstack without error" {
-  run stack-spin -i instances/offline-instance.yml -s ./src up
-  echo "output: $output"
-  assert_success
-
-  run stack-spin -i instances/offline-instance.yml -s ./src down
-  echo "output: $output"
-  assert_success
-}
