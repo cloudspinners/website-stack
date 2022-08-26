@@ -8,6 +8,7 @@ load "${BATS_HELPER_DIR}/bats-assert/load.bash"
               --retry-delay 2 \
               --retry 30 \
               --retry-max-time 60 \
+              --verbose \
               "http://localstack:4566"
   echo "output: $output"
   assert_equal "$status" 0
@@ -20,8 +21,8 @@ load "${BATS_HELPER_DIR}/bats-assert/load.bash"
 }
 
 
-@test "Running plan on the stack shows that changes are needed" {
-  run stack-spin -i instances/offline-instance.yml -s ./src plan
-  echo "output: $output"
-  assert_failure 2
-}
+# @test "Running plan on the stack shows that changes are needed" {
+#   run stack-spin -i instances/offline-instance.yml -s ./src plan
+#   echo "output: $output"
+#   assert_failure 2
+# }
