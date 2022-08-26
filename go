@@ -53,6 +53,7 @@ do
         dojo -image kiefm/spin-tools-dojo:localdev
         ;;
     test)
+        docker pull kiefm/spin-tools-dojo:latest
         dojo "./gojo test"
         ;;
     testdev)
