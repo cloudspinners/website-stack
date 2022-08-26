@@ -4,9 +4,11 @@ load "${BATS_HELPER_DIR}/bats-assert/load.bash"
 
 @test "Something is listening on the localstack port" {
   run curl -s --show-error \
+              --retry 30 \
+              --retry-all-errors \
+              --retry-connrefused \
               --connect-timeout 5 \
               --retry-delay 2 \
-              --retry 30 \
               --retry-max-time 60 \
               --verbose \
               "http://localstack:4566"

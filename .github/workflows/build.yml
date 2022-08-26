@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  validate_stack_code:
+  test_the_stack_code:
     runs-on: ubuntu-latest
 
     steps:
