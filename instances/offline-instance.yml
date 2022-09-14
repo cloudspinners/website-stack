@@ -1,5 +1,9 @@
 ---
 stack_instance:
+
+  stack_name: website-stack
+  instance_id: offline
+
   parameters:
     website_name: example-website-xyz
     instance_name: offline

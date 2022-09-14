@@ -5,7 +5,19 @@ set -euo pipefail
 ME=`basename $0`
 MYFULL=`readlink -f $0`
 MYDIR=`dirname $MYFULL`
-USAGE="USAGE: $ME [update|dojo|dojodev|test|testdev|release]"
+USAGE="USAGE: $ME [update|dojo|dojodev|test|testdev]
+    update      Make sure the latest published spin-tools-dojo image is available locally
+    dojo        Update and start a spin-tools-dojo instance using the latest published image
+    test        Run this project's tests in the latest published spin-tools-dojo image
+    dojodev     Start a spin-tools-dojo instance using the local image with the :localdev tag
+                (normally one you've built locally but not pushed yet)
+    testdev     Run this project's tests in the local image with the :localdev tag
+"
+
+print_usage()
+{
+    >&2 echo "USAGE: $USAGE"
+}
 
 warn()
 {
@@ -15,18 +27,13 @@ warn()
 fail()
 {
     >&2 echo "[$ME] FAIL: $*"
-    >&2 echo "USAGE: $USAGE"
+    print_usage
     exit 1
 }
 
 info()
 {
     echo "[$ME] INFO: $*"
-}
-
-print_usage()
-{
-    >&2 echo "USAGE: $USAGE"
 }
 
 
@@ -65,9 +72,6 @@ do
         else
             fail "Can't get version, missing CHANGELOG.md"
         fi
-        ;;
-    release)
-        do_release
         ;;
     help)
         print_usage
