@@ -16,7 +16,7 @@ stack_instance:
       access_key: test
       secret_key: test
 
-  tool: 
+  tool:
     name: terraform
     backend:
       name: local

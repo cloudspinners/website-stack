@@ -1,0 +1,22 @@
+# Copy this file to website-stack/instance-spec.yml and edit it to use for your personal sandbox instance
+---
+stack_instance:
+
+  stack_name: website-stack
+  instance_id: offline
+
+  parameters:
+    website_name: cloudspin.xyz
+    instance_name: YOURNAME.dev.cloudspin.xyz
+    unique_id: YOURNAME321
+
+  platform:
+    name: aws
+    parameters:
+      aws_region: us-east-2
+      aws_profile: iac_site_manager
+
+  tool:
+    name: terraform
+    backend:
+      name: local
