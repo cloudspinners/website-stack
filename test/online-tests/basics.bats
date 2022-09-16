@@ -2,19 +2,9 @@ load "${BATS_HELPER_DIR}/bats-support/load.bash"
 load "${BATS_HELPER_DIR}/bats-assert/load.bash"
 
 
-setup_file() {
-    >&3 echo "setup_file started"
-    export AWS_ACCESS_KEY_ID=${AWS_SANDBOX_ACCESS_KEY_ID}
-    export AWS_SECRET_ACCESS_KEY=${AWS_SANDBOX_SECRET_ACCESS_KEY}
-    >&3 echo "setup_file completed"
-}
-
-
 @test "The AWS credentials are provided in the expected environment variables" {
-  refute [ -z ${AWS_ACCESS_KEY_ID+x} ]
-  refute [ -z ${AWS_SECRET_ACCESS_KEY+x} ]
-  # refute [ -z ${AWS_SANDBOX_ACCESS_KEY_ID+x} ]
-  # refute [ -z ${AWS_SANDBOX_SECRET_ACCESS_KEY+x} ]
+    refute [ -z "${AWS_ACCESS_KEY_ID}" ]
+    refute [ -z "${AWS_SECRET_ACCESS_KEY}" ]
 }
 
 

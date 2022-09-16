@@ -3,10 +3,7 @@ load "${BATS_HELPER_DIR}/bats-assert/load.bash"
 
 
 setup_file() {
-    >&3 echo "setup_file started"
-    export AWS_ACCESS_KEY_ID=${AWS_SANDBOX_ACCESS_KEY_ID}
-    export AWS_SECRET_ACCESS_KEY=${AWS_SANDBOX_SECRET_ACCESS_KEY}
-    >&3 echo "setup_file completed"
+    stack-spin -i instances/online-instance.yml up
 }
 
 
@@ -32,6 +29,5 @@ setup_file() {
 
 
 teardown_file() {
-    >&3 echo "Running stack-spin down to destroy the resources"
-    # stack-spin -i instances/online-instance.yml down
+    stack-spin -i instances/online-instance.yml down
 }
