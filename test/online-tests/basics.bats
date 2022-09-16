@@ -20,8 +20,10 @@ aws_secret_access_key=${AWS_SANDBOX_SECRET_ACCESS_KEY}
   refute [ -z ${AWS_SANDBOX_SECRET_ACCESS_KEY+x} ]
 }
 
+
 @test "The aws cli can use the AWS API" {
     run aws --profile spintools_aws s3api list-buckets
+    echo "command: $BATS_RUN_COMMAND"
     echo "output: $output"
     assert_success
 }

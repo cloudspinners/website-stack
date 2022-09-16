@@ -12,7 +12,7 @@ aws_access_key_id=${AWS_SANDBOX_ACCESS_KEY_ID}
 aws_secret_access_key=${AWS_SANDBOX_SECRET_ACCESS_KEY}
 " > ~/.aws/credentials
     >&3 echo "Running stack-spin up to create resources"
-    stack-spin -i instances/online-instance.yml up
+    # stack-spin -i instances/online-instance.yml up
     >&3 echo "setup_file completed"
 }
 
@@ -40,5 +40,5 @@ aws_secret_access_key=${AWS_SANDBOX_SECRET_ACCESS_KEY}
 
 teardown_file() {
     >&3 echo "Running stack-spin down to destroy the resources"
-    stack-spin -i instances/online-instance.yml down
+    # stack-spin -i instances/online-instance.yml down
 }
