@@ -7,16 +7,34 @@ if [ -z "${SPIN_TOOLS_VERSION:-}" ] ; then
 	exit 1
 fi
 
+USAGE="Usage: gojo [test|test-online]"
+
+
+if [ "$#" -eq 0 ] ; then
+    >&2  echo "No command given"
+    >&2  echo ${USAGE}
+    exit 1
+fi
+
+
 for arg in "$@"
 do
 	case "$arg" in
-	test)
-		echo "Running tests"
-		time bats ./test/tests
+	test|test-offline)
+		echo "Running offline tests"
+		time bats ./test/offline-tests
+		;;
+	test-online)
+		echo "Running online tests"
+		time bats ./test/online-tests
+		;;
+	help)
+	    >&2  echo ${USAGE}
 		;;
 	*)
-		echo "Usage: gojo [test]"
-		exit 0
+	    >&2  echo "Unknown command ${arg}"
+	    >&2  echo ${USAGE}
+	    exit 1
 		;;
 	esac
 done

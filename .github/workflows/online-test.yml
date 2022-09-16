@@ -1,4 +1,4 @@
-name: Build Website-Stack
+name: Online tests
 
 on:
   push:
@@ -29,6 +29,6 @@ jobs:
           mkdir -p ~/.docker/cli-plugins
           cp ./bin/docker-compose ~/.docker/cli-plugins/
       -
-        name: Run offline tests
+        name: Run online tests
         run: |
-          ./go test
+          ./go test-online

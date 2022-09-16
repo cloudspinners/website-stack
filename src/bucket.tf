@@ -1,7 +1,7 @@
 
 resource "aws_s3_bucket" "website_bucket" {
   bucket = local.bucket_name
-  acl    = "public-read"
+  force_destroy = true
   timeouts {
     create = "30s"
     read   = "30s"
@@ -9,6 +9,12 @@ resource "aws_s3_bucket" "website_bucket" {
     delete = "30s"
   }
 }
+
+resource "aws_s3_bucket_acl" "website_bucket_acl" {
+  bucket = aws_s3_bucket.website_bucket.id
+  acl    = "public-read"
+}
+
 
 resource "aws_s3_bucket_website_configuration" "website_bucket_configuration" {
   bucket = aws_s3_bucket.website_bucket.id
@@ -20,9 +26,23 @@ resource "aws_s3_bucket_website_configuration" "website_bucket_configuration" {
   }
 }
 
+resource "aws_s3_bucket_policy" "website_bucket_policy" {
+  bucket = aws_s3_bucket.website_bucket.id
 
-# resource "aws_ssm_parameter" "spin_tools_test" {
-#   name  = "spin_tools_test_parameter"
-#   type  = "String"
-#   value = local.bucket_name
-# }
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid       = "PublicReadGetObject"
+        Effect    = "Allow"
+        Principal = "*"
+        Action    = "s3:GetObject"
+        Resource = [
+          aws_s3_bucket.website_bucket.arn,
+          "${aws_s3_bucket.website_bucket.arn}/*",
+        ]
+      },
+    ]
+  })
+}
+

@@ -1,0 +1,21 @@
+---
+stack_instance:
+
+  stack_name: website-stack
+  instance_id: online
+
+  parameters:
+    website_name: cloudspin.xyz
+    instance_name: online.dev.cloudspin.xyz
+    unique_id: online123
+
+  platform:
+    name: aws
+    parameters:
+      aws_region: us-east-2
+      aws_profile: spintools_aws
+
+  tool: 
+    name: terraform
+    backend:
+      name: local
