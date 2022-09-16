@@ -10,13 +10,17 @@ setup_file() {
 }
 
 
-@test "The AWS sandbox credentials are provided in the environment" {
+@test "The AWS credentials are provided in the expected environment variables" {
   refute [ -z ${AWS_ACCESS_KEY_ID+x} ]
   refute [ -z ${AWS_SECRET_ACCESS_KEY+x} ]
   # refute [ -z ${AWS_SANDBOX_ACCESS_KEY_ID+x} ]
   # refute [ -z ${AWS_SANDBOX_SECRET_ACCESS_KEY+x} ]
 }
 
+
+@test "The AWS access key id looks like an AWS access key id" {
+    assert [ "${AWS_ACCESS_KEY_ID:0:4}" == "AKIA" ]
+}
 
 @test "The aws cli can use the AWS API" {
     run aws s3api list-buckets
