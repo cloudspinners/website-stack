@@ -1,7 +1,7 @@
 
 # What is this
 
-Website-stack is a reference infrastructure project that demonstrates how to use the cloudspin framework to build, deliver, and manage infrastructure. The infrastructure defined in this project is a simple implementation of static website hosting on an AWS S3 bucket. Also see [cloudspin.xyz](https://github.com/cloudspinners/website-cloudspin.xyz) as an example of a website that can be hosted on infrastructure provided by this stack.
+Website-stack is a reference infrastructure project that demonstrates how to use the cloudspin framework to build, deliver, and manage infrastructure. The infrastructure defined in this project is a simple implementation of static website hosting on an AWS S3 bucket. Also see [cloudspin-examples.com](https://github.com/cloudspinners/website-cloudspin.xyz) as an example of a website that can be hosted on infrastructure provided by this stack.
 
 *NOTE:* _This is not a ready-to-use project, it's more like an executable cocktail napkin that I'm using to sketch out ideas for building, testing, and delivering infrastructure projects._
 
@@ -37,5 +37,5 @@ The output of this project is a versioned website-stack package, which can be us
 
 # How to create and manage infrastructure using the website-stack code
 
-See [cloudspin.xyz](https://github.com/cloudspinners/website-cloudspin.xyz) for an example.
+See [cloudspin-examples.com](https://github.com/cloudspinners/website-cloudspin-examples.com) for an example.
 

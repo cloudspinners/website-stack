@@ -5,8 +5,8 @@ stack_instance:
   instance_id: online
 
   parameters:
-    website_name: cloudspin.xyz
-    instance_name: online.dev.cloudspin.xyz
+    website_name: cloudspin-examples.com
+    instance_name: online-test
     unique_id: online123
 
   platform:

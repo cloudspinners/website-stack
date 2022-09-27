@@ -6,8 +6,8 @@ stack_instance:
   instance_id: YOURNAME_sandbox
 
   parameters:
-    website_name: cloudspin.xyz
-    instance_name: YOURNAME.dev.cloudspin.xyz
+    website_name: cloudspin-examples.com
+    instance_name: YOURNAME.dev
     unique_id: YOURNAME321
 
   platform:
