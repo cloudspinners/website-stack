@@ -2,6 +2,12 @@ load "${BATS_HELPER_DIR}/bats-support/load.bash"
 load "${BATS_HELPER_DIR}/bats-assert/load.bash"
 
 
+setup_file() {
+    >&2 echo "Adding the hosted zone required by the stack"
+    ZONE_ID=$(aws --endpoint-url=http://localstack:4566 route53 create-hosted-zone --name example-website-xyz --caller-reference r1 | jq -r '.HostedZone.Id')
+}
+
+
 @test "Something is listening on the localstack port" {
   run curl -s --show-error \
               --retry 20 \
@@ -27,4 +33,10 @@ load "${BATS_HELPER_DIR}/bats-assert/load.bash"
   run stack-spin -i instances/offline-instance.yml -s ./src plan
   echo "output: $output"
   assert_failure 2
+}
+
+
+teardown_file() {
+    >&2 echo "Removing hosted zone required by the stack"
+    aws --endpoint-url=http://localstack:4566 route53 delete-hosted-zone --id ${ZONE_ID}
 }
