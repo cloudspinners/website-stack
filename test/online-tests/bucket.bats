@@ -34,10 +34,18 @@ aws_secret_access_key=${AWS_SANDBOX_SECRET_ACCESS_KEY}
 
 >&3 echo "KSM4"
 
+>&3 echo "WEBSITE_NAME=$(yq .stack_instance.parameters.website_name instance-spec.yml)"
+>&3 yq .stack_instance.parameters.website_name instance-spec.yml
     WEBSITE_NAME=$(yq .stack_instance.parameters.website_name instance-spec.yml)
+>&3 echo "INSTANCE_NAME=$(yq .stack_instance.parameters.instance_name instance-spec.yml)"
+>&3 yq .stack_instance.parameters.instance_name instance-spec.yml
     INSTANCE_NAME=$(yq .stack_instance.parameters.instance_name instance-spec.yml)
+>&3 echo "UNIQUE_ID=$(yq .stack_instance.parameters.unique_id instance-spec.yml)"
+>&3 yq .stack_instance.parameters.unique_id instance-spec.yml
     UNIQUE_ID=$(yq .stack_instance.parameters.unique_id instance-spec.yml)
+>&3 echo S3_BUCKET_NAME="website-stack-${WEBSITE_NAME}-${INSTANCE_NAME}-${UNIQUE_ID}"
     export S3_BUCKET_NAME="website-stack-${WEBSITE_NAME}-${INSTANCE_NAME}-${UNIQUE_ID}"
+>&3 echo WEBSITE_HOSTNAME="${INSTANCE_NAME}.${WEBSITE_NAME}"
     export WEBSITE_HOSTNAME="${INSTANCE_NAME}.${WEBSITE_NAME}"
 
     >&3 echo "the stack should be ready for testing"
