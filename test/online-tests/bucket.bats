@@ -15,7 +15,7 @@ setup_file() {
     mkdir -p ~/.aws
     if [ -e ~/.aws/credentials ] ; then
         >&3 echo "Backing up aws credentials file"
-        AWS_CREDENTIALS_BAK=$(mktemp -u -p ~/.aws bak.credentialsXXXXXX)
+        export AWS_CREDENTIALS_BAK=$(mktemp -u -p ~/.aws bak.credentialsXXXXXX)
         cp ~/.aws/credentials ${AWS_CREDENTIALS_BAK}
     fi
 
@@ -34,18 +34,10 @@ aws_secret_access_key=${AWS_SANDBOX_SECRET_ACCESS_KEY}
 
 >&3 echo "KSM4"
 
-# >&3 echo "WEBSITE_NAME=$(yq .stack_instance.parameters.website_name ${INSTANCE_CONFIGURATION_FILE})"
-# >&3 yq .stack_instance.parameters.website_name ${INSTANCE_CONFIGURATION_FILE}
     WEBSITE_NAME=$(yq .stack_instance.parameters.website_name ${INSTANCE_CONFIGURATION_FILE})
-# >&3 echo "INSTANCE_NAME=$(yq .stack_instance.parameters.instance_name ${INSTANCE_CONFIGURATION_FILE})"
-# >&3 yq .stack_instance.parameters.instance_name ${INSTANCE_CONFIGURATION_FILE}
     INSTANCE_NAME=$(yq .stack_instance.parameters.instance_name ${INSTANCE_CONFIGURATION_FILE})
-# >&3 echo "UNIQUE_ID=$(yq .stack_instance.parameters.unique_id ${INSTANCE_CONFIGURATION_FILE})"
-# >&3 yq .stack_instance.parameters.unique_id ${INSTANCE_CONFIGURATION_FILE}
     UNIQUE_ID=$(yq .stack_instance.parameters.unique_id ${INSTANCE_CONFIGURATION_FILE})
-# >&3 echo S3_BUCKET_NAME="website-stack-${WEBSITE_NAME}-${INSTANCE_NAME}-${UNIQUE_ID}"
     export S3_BUCKET_NAME="website-stack-${WEBSITE_NAME}-${INSTANCE_NAME}-${UNIQUE_ID}"
-# >&3 echo WEBSITE_HOSTNAME="${INSTANCE_NAME}.${WEBSITE_NAME}"
     export WEBSITE_HOSTNAME="${INSTANCE_NAME}.${WEBSITE_NAME}"
 
     >&3 echo "the stack should be ready for testing"
@@ -107,7 +99,7 @@ teardown_file() {
     >&3 echo "spinning the online stack down"
     # stack-spin -i ${INSTANCE_CONFIGURATION_FILE} down
 
-    if [ -e ${AWS_CREDENTIALS_BAK} ] ; then
+    if [ ! -z ${AWS_CREDENTIALS_BAK} -a -e ${AWS_CREDENTIALS_BAK} ] ; then
         mv ${AWS_CREDENTIALS_BAK} ~/.aws/credentials
     fi
 }
