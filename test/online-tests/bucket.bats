@@ -1,25 +1,37 @@
 load "${BATS_HELPER_DIR}/bats-support/load.bash"
 load "${BATS_HELPER_DIR}/bats-assert/load.bash"
 
-S3_BUCKET_NAME="spinsite-cloudspin-examples.com-online-test-online123"
-S3_BUCKET_ENDPOINT="spinsite-cloudspin-examples.com-online-test-online123.s3-website.us-east-2.amazonaws.com"
-
 
 setup_file() {
     >&3 echo "spinning the online stack up for testing"
+
+    INSTANCE_CONFIGURATION_FILE="${TARGET_INSTANCE_CONFIGURATION_FILE:=instance-spec.yml}"
+
     unset AWS_ACCESS_KEY_ID
     unset AWS_SECRET_ACCESS_KEY
 
-    echo "mkdir -p ~/.aws"
     mkdir -p ~/.aws
+    if [ -e ~/.aws/credentials ] ; then
+        >&3 echo "Backing up aws credentials file"
+        AWS_CREDENTIALS_BAK=$(mktemp -u -p ~/.aws bak.credentialsXXXXXX)
+        cp ~/.aws/credentials ${AWS_CREDENTIALS_BAK}
+    fi
+
     echo "
 [spintools_aws]
 aws_access_key_id=${AWS_SANDBOX_ACCESS_KEY_ID}
 aws_secret_access_key=${AWS_SANDBOX_SECRET_ACCESS_KEY}
 " > ~/.aws/credentials
 
-    stack-spin -i instances/online-instance.yml up
-    >&3 echo "setup_file completed"
+    stack-spin -i ${INSTANCE_CONFIGURATION_FILE} up
+
+    WEBSITE_NAME=$(yq .stack_instance.parameters.website_name instance-spec.yml)
+    INSTANCE_NAME=$(yq .stack_instance.parameters.instance_name instance-spec.yml)
+    UNIQUE_ID=$(yq .stack_instance.parameters.unique_id instance-spec.yml)
+    export S3_BUCKET_NAME="website-stack-${WEBSITE_NAME}-${INSTANCE_NAME}-${UNIQUE_ID}"
+    export WEBSITE_HOSTNAME="${INSTANCE_NAME}.${WEBSITE_NAME}"
+
+    >&3 echo "the stack should be ready for testing"
 }
 
 
@@ -43,6 +55,7 @@ aws_secret_access_key=${AWS_SANDBOX_SECRET_ACCESS_KEY}
 
 
 @test "The s3 bucket exists" {
+    refute [ -z "${S3_BUCKET_NAME}" ]
     run aws --output json --profile spintools_aws s3api get-bucket-location --bucket "${S3_BUCKET_NAME}"
     echo "command: $BATS_RUN_COMMAND"
     echo "output: $output"
@@ -50,26 +63,35 @@ aws_secret_access_key=${AWS_SANDBOX_SECRET_ACCESS_KEY}
 }
 
 
-@test "Can reach upload a page and then access it through the http endpoint" {
-    run aws --profile spintools_aws s3 cp test/content/index.html "s3://${S3_BUCKET_NAME}/"
-    echo "command: $BATS_RUN_COMMAND"
-    echo "output: $output"
-    assert_success
+# @test "Can upload a page and then access it through the http endpoint" {
+#     run aws --profile spintools_aws s3 cp test/content/index.html "s3://${S3_BUCKET_NAME}/"
+#     echo "command: $BATS_RUN_COMMAND"
+#     echo "output: $output"
+#     assert_success
 
-    run curl -s "http://${S3_BUCKET_ENDPOINT}/index.html"
-    echo "command: $BATS_RUN_COMMAND"
-    echo "output: $output"
-    assert_output --partial "Hello there"
-}
+#     S3_BUCKET_ENDPOINT=$(jq '.website_bucket_endpoint.value' ./_tmp/stack-output-values.json)
+
+#     run curl -s "http://${S3_BUCKET_ENDPOINT}/index.html"
+#     echo "command: $BATS_RUN_COMMAND"
+#     echo "output: $output"
+#     assert_output --partial "Hello there"
+# }
+
 
 @test "The hostname is found" {
-    run host online-test.cloudspin-examples.com
+    run host "${WEBSITE_HOSTNAME}"
     echo "command: $BATS_RUN_COMMAND"
     echo "output: $output"
     assert_success
 }
+
 
 teardown_file() {
     >&3 echo "spinning the online stack down"
-    stack-spin -i instances/online-instance.yml down
+    stack-spin -i ${INSTANCE_CONFIGURATION_FILE} down
+
+    if [ -e ${AWS_CREDENTIALS_BAK} ] ; then
+        mv ${AWS_CREDENTIALS_BAK} ~/.aws/credentials
+    fi
 }
+
