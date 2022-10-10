@@ -5,7 +5,7 @@ load "${BATS_HELPER_DIR}/bats-assert/load.bash"
 setup_file() {
     >&3 echo "spinning the online stack up for testing"
 
-    INSTANCE_CONFIGURATION_FILE="${TARGET_INSTANCE_CONFIGURATION_FILE:=instance-spec.yml}"
+    INSTANCE_CONFIGURATION_FILE="${TARGET_INSTANCE_CONFIGURATION_FILE:=${INSTANCE_CONFIGURATION_FILE}}"
 
     unset AWS_ACCESS_KEY_ID
     unset AWS_SECRET_ACCESS_KEY
@@ -34,18 +34,18 @@ aws_secret_access_key=${AWS_SANDBOX_SECRET_ACCESS_KEY}
 
 >&3 echo "KSM4"
 
->&3 echo "WEBSITE_NAME=$(yq .stack_instance.parameters.website_name instance-spec.yml)"
->&3 yq .stack_instance.parameters.website_name instance-spec.yml
-    WEBSITE_NAME=$(yq .stack_instance.parameters.website_name instance-spec.yml)
->&3 echo "INSTANCE_NAME=$(yq .stack_instance.parameters.instance_name instance-spec.yml)"
->&3 yq .stack_instance.parameters.instance_name instance-spec.yml
-    INSTANCE_NAME=$(yq .stack_instance.parameters.instance_name instance-spec.yml)
->&3 echo "UNIQUE_ID=$(yq .stack_instance.parameters.unique_id instance-spec.yml)"
->&3 yq .stack_instance.parameters.unique_id instance-spec.yml
-    UNIQUE_ID=$(yq .stack_instance.parameters.unique_id instance-spec.yml)
->&3 echo S3_BUCKET_NAME="website-stack-${WEBSITE_NAME}-${INSTANCE_NAME}-${UNIQUE_ID}"
+# >&3 echo "WEBSITE_NAME=$(yq .stack_instance.parameters.website_name ${INSTANCE_CONFIGURATION_FILE})"
+# >&3 yq .stack_instance.parameters.website_name ${INSTANCE_CONFIGURATION_FILE}
+    WEBSITE_NAME=$(yq .stack_instance.parameters.website_name ${INSTANCE_CONFIGURATION_FILE})
+# >&3 echo "INSTANCE_NAME=$(yq .stack_instance.parameters.instance_name ${INSTANCE_CONFIGURATION_FILE})"
+# >&3 yq .stack_instance.parameters.instance_name ${INSTANCE_CONFIGURATION_FILE}
+    INSTANCE_NAME=$(yq .stack_instance.parameters.instance_name ${INSTANCE_CONFIGURATION_FILE})
+# >&3 echo "UNIQUE_ID=$(yq .stack_instance.parameters.unique_id ${INSTANCE_CONFIGURATION_FILE})"
+# >&3 yq .stack_instance.parameters.unique_id ${INSTANCE_CONFIGURATION_FILE}
+    UNIQUE_ID=$(yq .stack_instance.parameters.unique_id ${INSTANCE_CONFIGURATION_FILE})
+# >&3 echo S3_BUCKET_NAME="website-stack-${WEBSITE_NAME}-${INSTANCE_NAME}-${UNIQUE_ID}"
     export S3_BUCKET_NAME="website-stack-${WEBSITE_NAME}-${INSTANCE_NAME}-${UNIQUE_ID}"
->&3 echo WEBSITE_HOSTNAME="${INSTANCE_NAME}.${WEBSITE_NAME}"
+# >&3 echo WEBSITE_HOSTNAME="${INSTANCE_NAME}.${WEBSITE_NAME}"
     export WEBSITE_HOSTNAME="${INSTANCE_NAME}.${WEBSITE_NAME}"
 
     >&3 echo "the stack should be ready for testing"
