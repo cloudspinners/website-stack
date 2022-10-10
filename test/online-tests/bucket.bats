@@ -10,29 +10,19 @@ setup_file() {
     unset AWS_ACCESS_KEY_ID
     unset AWS_SECRET_ACCESS_KEY
 
->&3 echo "KSM1"
-
     mkdir -p ~/.aws
     if [ -e ~/.aws/credentials ] ; then
         >&3 echo "Backing up aws credentials file"
         export AWS_CREDENTIALS_BAK=$(mktemp -u -p ~/.aws bak.credentialsXXXXXX)
         cp ~/.aws/credentials ${AWS_CREDENTIALS_BAK}
     fi
-
->&3 echo "KSM2"
-
     echo "
 [spintools_aws]
 aws_access_key_id=${AWS_SANDBOX_ACCESS_KEY_ID}
 aws_secret_access_key=${AWS_SANDBOX_SECRET_ACCESS_KEY}
 " > ~/.aws/credentials
 
-
->&3 echo "KSM3: stack-spin -i ${INSTANCE_CONFIGURATION_FILE} up"
-
-    # stack-spin -i ${INSTANCE_CONFIGURATION_FILE} up
-
->&3 echo "KSM4"
+    stack-spin -i ${INSTANCE_CONFIGURATION_FILE} up
 
     WEBSITE_NAME=$(yq .stack_instance.parameters.website_name ${INSTANCE_CONFIGURATION_FILE})
     INSTANCE_NAME=$(yq .stack_instance.parameters.instance_name ${INSTANCE_CONFIGURATION_FILE})
@@ -97,7 +87,7 @@ aws_secret_access_key=${AWS_SANDBOX_SECRET_ACCESS_KEY}
 
 teardown_file() {
     >&3 echo "spinning the online stack down"
-    # stack-spin -i ${INSTANCE_CONFIGURATION_FILE} down
+    stack-spin -i ${INSTANCE_CONFIGURATION_FILE} down
 
     if [ ! -z ${AWS_CREDENTIALS_BAK} -a -e ${AWS_CREDENTIALS_BAK} ] ; then
         mv ${AWS_CREDENTIALS_BAK} ~/.aws/credentials
