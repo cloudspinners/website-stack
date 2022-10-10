@@ -10,6 +10,8 @@ setup_file() {
     unset AWS_ACCESS_KEY_ID
     unset AWS_SECRET_ACCESS_KEY
 
+>&3 echo "KSM1"
+
     mkdir -p ~/.aws
     if [ -e ~/.aws/credentials ] ; then
         >&3 echo "Backing up aws credentials file"
@@ -17,13 +19,20 @@ setup_file() {
         cp ~/.aws/credentials ${AWS_CREDENTIALS_BAK}
     fi
 
+>&3 echo "KSM2"
+
     echo "
 [spintools_aws]
 aws_access_key_id=${AWS_SANDBOX_ACCESS_KEY_ID}
 aws_secret_access_key=${AWS_SANDBOX_SECRET_ACCESS_KEY}
 " > ~/.aws/credentials
 
-    stack-spin -i ${INSTANCE_CONFIGURATION_FILE} up
+
+>&3 echo "KSM3: stack-spin -i ${INSTANCE_CONFIGURATION_FILE} up"
+
+    # stack-spin -i ${INSTANCE_CONFIGURATION_FILE} up
+
+>&3 echo "KSM4"
 
     WEBSITE_NAME=$(yq .stack_instance.parameters.website_name instance-spec.yml)
     INSTANCE_NAME=$(yq .stack_instance.parameters.instance_name instance-spec.yml)
@@ -63,19 +72,19 @@ aws_secret_access_key=${AWS_SANDBOX_SECRET_ACCESS_KEY}
 }
 
 
-# @test "Can upload a page and then access it through the http endpoint" {
-#     run aws --profile spintools_aws s3 cp test/content/index.html "s3://${S3_BUCKET_NAME}/"
-#     echo "command: $BATS_RUN_COMMAND"
-#     echo "output: $output"
-#     assert_success
+@test "Can upload a page and then access it through the http endpoint" {
+    run aws --profile spintools_aws s3 cp test/content/index.html "s3://${S3_BUCKET_NAME}/"
+    echo "command: $BATS_RUN_COMMAND"
+    echo "output: $output"
+    assert_success
 
-#     S3_BUCKET_ENDPOINT=$(jq '.website_bucket_endpoint.value' ./_tmp/stack-output-values.json)
+    S3_BUCKET_ENDPOINT=$(jq -r '.website_bucket_endpoint.value' ./_tmp/stack-output-values.json)
 
-#     run curl -s "http://${S3_BUCKET_ENDPOINT}/index.html"
-#     echo "command: $BATS_RUN_COMMAND"
-#     echo "output: $output"
-#     assert_output --partial "Hello there"
-# }
+    run curl -s "http://${S3_BUCKET_ENDPOINT}/index.html"
+    echo "command: $BATS_RUN_COMMAND"
+    echo "output: $output"
+    assert_output --partial "Hello there"
+}
 
 
 @test "The hostname is found" {
@@ -88,7 +97,7 @@ aws_secret_access_key=${AWS_SANDBOX_SECRET_ACCESS_KEY}
 
 teardown_file() {
     >&3 echo "spinning the online stack down"
-    stack-spin -i ${INSTANCE_CONFIGURATION_FILE} down
+    # stack-spin -i ${INSTANCE_CONFIGURATION_FILE} down
 
     if [ -e ${AWS_CREDENTIALS_BAK} ] ; then
         mv ${AWS_CREDENTIALS_BAK} ~/.aws/credentials
