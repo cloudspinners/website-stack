@@ -6,8 +6,10 @@ setup_file() {
     >&3 echo "setup for online testing"
 
     if [ -n "${TARGET_INSTANCE_CONFIGURATION_FILE}" ] ; then
-        export INSTANCE_CONFIGURATION_FILE=TARGET_INSTANCE_CONFIGURATION_FILE
+        >&3 echo "Using instance configuration file ${TARGET_INSTANCE_CONFIGURATION_FILE}"
+        export INSTANCE_CONFIGURATION_FILE=${TARGET_INSTANCE_CONFIGURATION_FILE}
     else
+        >&3 echo "Using default instance configuration file"
         export INSTANCE_CONFIGURATION_FILE=./instance-spec.yml
     fi
 
@@ -26,7 +28,7 @@ aws_access_key_id=${AWS_SANDBOX_ACCESS_KEY_ID}
 aws_secret_access_key=${AWS_SANDBOX_SECRET_ACCESS_KEY}
 " > ~/.aws/credentials
 
-    >&3 echo "spinning the online stack up for testing"
+    >&3 echo "spinning the online stack up for testing using ${INSTANCE_CONFIGURATION_FILE}"
     stack-spin -i ${INSTANCE_CONFIGURATION_FILE} up
 
     WEBSITE_NAME=$(yq .stack_instance.parameters.website_name ${INSTANCE_CONFIGURATION_FILE})
