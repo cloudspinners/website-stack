@@ -1,6 +1,6 @@
 
 resource "aws_s3_bucket" "website_bucket" {
-  bucket = local.bucket_name
+  bucket = local.website_hostname
   force_destroy = true
   timeouts {
     create = "30s"

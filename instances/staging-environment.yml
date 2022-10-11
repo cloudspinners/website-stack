@@ -7,7 +7,6 @@ stack_instance:
   parameters:
     website_name: cloudspin-examples.com
     instance_name: staging
-    unique_id: staging123
 
   platform:
     name: aws
@@ -18,4 +17,6 @@ stack_instance:
   tool: 
     name: terraform
     backend:
-      name: local
+      name: cloud
+      organization: spin-stacks
+      workspace: kief_sandbox

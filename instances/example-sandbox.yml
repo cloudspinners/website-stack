@@ -8,13 +8,12 @@ stack_instance:
   parameters:
     website_name: cloudspin-examples.com
     instance_name: YOURNAME.dev
-    unique_id: YOURNAME321
 
   platform:
     name: aws
     parameters:
       aws_region: us-east-2
-      aws_profile: spintools_aws_sandbox
+      aws_profile: spintools_aws
 
   tool:
     name: terraform

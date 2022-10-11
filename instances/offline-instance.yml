@@ -7,7 +7,6 @@ stack_instance:
   parameters:
     website_name: example-website-xyz
     instance_name: offline
-    unique_id: 123
 
   platform:
     name: localstack

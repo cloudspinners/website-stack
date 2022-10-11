@@ -3,9 +3,13 @@ load "${BATS_HELPER_DIR}/bats-assert/load.bash"
 
 
 setup_file() {
-    >&3 echo "spinning the online stack up for testing"
+    >&3 echo "setup for online testing"
 
-    INSTANCE_CONFIGURATION_FILE="${TARGET_INSTANCE_CONFIGURATION_FILE:=${INSTANCE_CONFIGURATION_FILE}}"
+    if [ -n "${TARGET_INSTANCE_CONFIGURATION_FILE}" ] ; then
+        export INSTANCE_CONFIGURATION_FILE=TARGET_INSTANCE_CONFIGURATION_FILE
+    else
+        export INSTANCE_CONFIGURATION_FILE=./instance-spec.yml
+    fi
 
     unset AWS_ACCESS_KEY_ID
     unset AWS_SECRET_ACCESS_KEY
@@ -22,13 +26,13 @@ aws_access_key_id=${AWS_SANDBOX_ACCESS_KEY_ID}
 aws_secret_access_key=${AWS_SANDBOX_SECRET_ACCESS_KEY}
 " > ~/.aws/credentials
 
+    >&3 echo "spinning the online stack up for testing"
     stack-spin -i ${INSTANCE_CONFIGURATION_FILE} up
 
     WEBSITE_NAME=$(yq .stack_instance.parameters.website_name ${INSTANCE_CONFIGURATION_FILE})
     INSTANCE_NAME=$(yq .stack_instance.parameters.instance_name ${INSTANCE_CONFIGURATION_FILE})
-    UNIQUE_ID=$(yq .stack_instance.parameters.unique_id ${INSTANCE_CONFIGURATION_FILE})
-    export S3_BUCKET_NAME="website-stack-${WEBSITE_NAME}-${INSTANCE_NAME}-${UNIQUE_ID}"
-    export WEBSITE_HOSTNAME="${INSTANCE_NAME}.${WEBSITE_NAME}"
+    export S3_BUCKET_NAME=$(yq -r .website_bucket_name.value _tmp/stack-output-values.json)
+    export WEBSITE_HOSTNAME=$(yq -r .website_hostname.value _tmp/stack-output-values.json)
 
     >&3 echo "the stack should be ready for testing"
 }
@@ -62,26 +66,32 @@ aws_secret_access_key=${AWS_SANDBOX_SECRET_ACCESS_KEY}
 }
 
 
-@test "Can upload a page and then access it through the http endpoint" {
-    run aws --profile spintools_aws s3 cp test/content/index.html "s3://${S3_BUCKET_NAME}/"
-    echo "command: $BATS_RUN_COMMAND"
-    echo "output: $output"
-    assert_success
-
-    S3_BUCKET_ENDPOINT=$(jq -r '.website_bucket_endpoint.value' ./_tmp/stack-output-values.json)
-
-    run curl -s "http://${S3_BUCKET_ENDPOINT}/index.html"
-    echo "command: $BATS_RUN_COMMAND"
-    echo "output: $output"
-    assert_output --partial "Hello there"
-}
-
-
 @test "The hostname is found" {
     run host "${WEBSITE_HOSTNAME}"
     echo "command: $BATS_RUN_COMMAND"
     echo "output: $output"
     assert_success
+}
+
+
+@test "Can upload a page and then access it through the http endpoint and hostname" {
+    S3_BUCKET_ENDPOINT=$(jq -r '.website_bucket_endpoint.value' ./_tmp/stack-output-values.json)
+
+    run aws --profile spintools_aws s3 cp test/content/index.html "s3://${S3_BUCKET_NAME}/"
+    echo "command: $BATS_RUN_COMMAND"
+    echo "output: $output"
+    assert_success
+
+    run curl -s "http://${S3_BUCKET_ENDPOINT}/index.html"
+    echo "command: $BATS_RUN_COMMAND"
+    echo "output: $output"
+    assert_output --partial "Hello there"
+
+    SITE_HOSTNAME=$(jq -r '.website_hostname.value' ./_tmp/stack-output-values.json)
+    run curl -s "http://${SITE_HOSTNAME}/index.html"
+    echo "command: $BATS_RUN_COMMAND"
+    echo "output: $output"
+    assert_output --partial "Hello there"
 }
 
 
