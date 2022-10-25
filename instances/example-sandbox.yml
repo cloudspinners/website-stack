@@ -1,4 +1,4 @@
-# Copy this file to website-stack/instance-spec.yml and edit it to use for your personal sandbox instance
+# Copy this file to website-stack/my-instance.yml and edit it to use for your personal sandbox instance
 ---
 stack_instance:
 

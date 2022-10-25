@@ -1,7 +1,7 @@
 
 # What is this
 
-Website-stack is a reference infrastructure project that demonstrates how to use the cloudspin framework to build, deliver, and manage infrastructure. The infrastructure defined in this project is a simple implementation of static website hosting on an AWS S3 bucket. Also see [cloudspin-examples.com](https://github.com/cloudspinners/website-cloudspin.xyz) as an example of a website that can be hosted on infrastructure provided by this stack.
+Website-stack is an infrastructure code project for managing a simple static website hosting setup on an AWS S3 bucket. It's designed as a demonstration of how to use the cloudspin tooling to manage infrastructure as composable stacks.
 
 *NOTE:* _This is not a ready-to-use project, it's more like an executable cocktail napkin that I'm using to sketch out ideas for building, testing, and delivering infrastructure projects._
 
@@ -32,10 +32,23 @@ Run the `dojo` command, which downloads a [spin-tools](https://github.com/clouds
 
 Run the `go` script on the host (not inside a running container) to manage dojo images to use and run tests from outside the container. Run `./go help` to see the commands available. Run the `gojo` script from inside the running container to run the test suite. Run `./gojo help` to see the commands available.
 
-The output of this project is a versioned website-stack package, which can be used to create instances of infrastructure for hosting static website content.
-
 
 # How to create and manage infrastructure using the website-stack code
 
-See [cloudspin-examples.com](https://github.com/cloudspinners/website-cloudspin-examples.com) for an example.
+Run the dojo command (having installed the prerequisites as explained above) to get a prompt with the spin-tools installed. Then you can run the `stack-spin` command to manage an instance of website-stack infrastructure.
+
+Configure your infrastructure stack by either adding a file under `./instances`, or by making a file in the base folder named `./my-instance.yml`. Copy the contents of `./instances/example-sandbox.yml` to play around. This stores terraform state locally.
+
+For a more persistent instance of the stack, use the cloud backend:
+
+```
+  tool: 
+    name: terraform
+    backend:
+      name: cloud
+      organization: my_organization
+      workspace: my_workspace
+```
+
+
 

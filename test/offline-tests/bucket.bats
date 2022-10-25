@@ -16,6 +16,7 @@ setup_file() {
 
 @test "The s3 bucket exists" {
     run aws --endpoint-url=http://localstack:4566 s3api get-bucket-location --bucket "offline.example-website-xyz"
+    echo "command: $BATS_RUN_COMMAND"
     echo "output: $output"
     assert_success
 }

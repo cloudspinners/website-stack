@@ -6,6 +6,6 @@
 test/volume/*
 !test/volume/.gitkeep
 docker-compose.yml.dojo
-instance-spec.yml
+my-instance.yml
 _work
 _tmp

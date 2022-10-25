@@ -10,7 +10,7 @@ setup_file() {
         export INSTANCE_CONFIGURATION_FILE=${TARGET_INSTANCE_CONFIGURATION_FILE}
     else
         >&3 echo "Using default instance configuration file"
-        export INSTANCE_CONFIGURATION_FILE=./instance-spec.yml
+        export INSTANCE_CONFIGURATION_FILE=./my-instance.yml
     fi
 
     unset AWS_ACCESS_KEY_ID

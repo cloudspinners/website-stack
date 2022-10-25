@@ -20,11 +20,11 @@ fi
 for arg in "$@"
 do
 	case "$arg" in
-	test|test-offline)
+	test|test-offline|offline)
 		echo "Running offline tests"
 		time bats ./test/offline-tests
 		;;
-	test-online)
+	test-online|online-test|online-tests|online)
 		echo "Running online tests"
 		time bats ./test/online-tests
 		;;
