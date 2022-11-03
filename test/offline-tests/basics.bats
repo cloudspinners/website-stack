@@ -1,9 +1,10 @@
 load "${BATS_HELPER_DIR}/bats-support/load.bash"
 load "${BATS_HELPER_DIR}/bats-assert/load.bash"
+load "/opt/spin-tools/lib/spin-bats-support.bash"
 
 
 setup_file() {
-    >&3 echo "Adding the hosted zone required by the stack"
+    test_out "Adding the hosted zone required by the stack"
     ZONE_ID=$(aws --endpoint-url=http://localstack:4566 route53 create-hosted-zone --name example-website-xyz --caller-reference r1 | jq -r '.HostedZone.Id')
 }
 
@@ -41,6 +42,6 @@ setup_file() {
 
 
 teardown_file() {
-    >&3 echo "Removing hosted zone required by the stack"
+    test_out "Removing hosted zone required by the stack"
     aws --endpoint-url=http://localstack:4566 route53 delete-hosted-zone --id ${ZONE_ID}
 }

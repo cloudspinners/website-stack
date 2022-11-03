@@ -1,42 +1,20 @@
 load "${BATS_HELPER_DIR}/bats-support/load.bash"
 load "${BATS_HELPER_DIR}/bats-assert/load.bash"
+load "/opt/spin-tools/lib/spin-bats-support.bash"
 
 
 setup_file() {
-    >&3 echo "setup for online testing"
+    test_out "setup for online testing"
+    instance_configuration
+    setup_real_aws_credentials
+    assert [ -n "${AWS_ACCESS_KEY_ID}" ]
 
-    if [ -n "${TARGET_INSTANCE_CONFIGURATION_FILE}" ] ; then
-        >&3 echo "Using instance configuration file ${TARGET_INSTANCE_CONFIGURATION_FILE}"
-        export INSTANCE_CONFIGURATION_FILE=${TARGET_INSTANCE_CONFIGURATION_FILE}
-    else
-        >&3 echo "Using default instance configuration file"
-        export INSTANCE_CONFIGURATION_FILE=./my-instance.yml
-    fi
-
-    unset AWS_ACCESS_KEY_ID
-    unset AWS_SECRET_ACCESS_KEY
-
-    mkdir -p ~/.aws
-    if [ -e ~/.aws/credentials ] ; then
-        >&3 echo "Backing up aws credentials file"
-        export AWS_CREDENTIALS_BAK=$(mktemp -u -p ~/.aws bak.credentialsXXXXXX)
-        cp ~/.aws/credentials ${AWS_CREDENTIALS_BAK}
-    fi
-    echo "
-[spintools_aws]
-aws_access_key_id=${AWS_SANDBOX_ACCESS_KEY_ID}
-aws_secret_access_key=${AWS_SANDBOX_SECRET_ACCESS_KEY}
-" > ~/.aws/credentials
-
-    >&3 echo "spinning the online stack up for testing using ${INSTANCE_CONFIGURATION_FILE}"
+    test_out "Spinning the online test stack up using ${INSTANCE_CONFIGURATION_FILE}"
     stack-spin -i ${INSTANCE_CONFIGURATION_FILE} up
+    test_out "stack-spin up has returned"
 
-    WEBSITE_NAME=$(yq .stack_instance.parameters.website_name ${INSTANCE_CONFIGURATION_FILE})
-    INSTANCE_NAME=$(yq .stack_instance.parameters.instance_name ${INSTANCE_CONFIGURATION_FILE})
     export S3_BUCKET_NAME=$(yq -r .website_bucket_name.value _tmp/stack-output-values.json)
     export WEBSITE_HOSTNAME=$(yq -r .website_hostname.value _tmp/stack-output-values.json)
-
-    >&3 echo "the stack should be ready for testing"
 }
 
 
@@ -98,11 +76,8 @@ aws_secret_access_key=${AWS_SANDBOX_SECRET_ACCESS_KEY}
 
 
 teardown_file() {
-    >&3 echo "spinning the online stack down"
+    test_out "Spinning the online test stack down"
     stack-spin -i ${INSTANCE_CONFIGURATION_FILE} down
-
-    if [ ! -z ${AWS_CREDENTIALS_BAK} -a -e ${AWS_CREDENTIALS_BAK} ] ; then
-        mv ${AWS_CREDENTIALS_BAK} ~/.aws/credentials
-    fi
+    test_out "stack-spin down has returned"
 }
 
