@@ -12,7 +12,6 @@ stack_instance:
     name: aws
     parameters:
       aws_region: us-east-2
-      aws_profile: spintools_aws
 
   tool: 
     name: terraform

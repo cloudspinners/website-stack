@@ -30,7 +30,7 @@ setup_file() {
 
 
 @test "The aws cli can use the AWS API" {
-    run aws --profile spintools_aws s3api list-buckets
+    run aws s3api list-buckets
     echo "command: $BATS_RUN_COMMAND"
     echo "output: $output"
     assert_success
@@ -39,7 +39,7 @@ setup_file() {
 
 @test "The s3 bucket exists" {
     refute [ -z "${S3_BUCKET_NAME}" ]
-    run aws --output json --profile spintools_aws s3api get-bucket-location --bucket "${S3_BUCKET_NAME}"
+    run aws --output json s3api get-bucket-location --bucket "${S3_BUCKET_NAME}"
     echo "command: $BATS_RUN_COMMAND"
     echo "output: $output"
     assert_success
@@ -57,7 +57,7 @@ setup_file() {
 @test "Can upload a page and then access it through the http endpoint and hostname" {
     S3_BUCKET_ENDPOINT=$(jq -r '.website_bucket_endpoint.value' ./_tmp/stack-output-values.json)
 
-    run aws --profile spintools_aws s3 cp test/content/index.html "s3://${S3_BUCKET_NAME}/"
+    run aws s3 cp test/content/index.html "s3://${S3_BUCKET_NAME}/"
     echo "command: $BATS_RUN_COMMAND"
     echo "output: $output"
     assert_success
