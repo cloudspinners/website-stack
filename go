@@ -60,13 +60,13 @@ do
     dojodev)
         dojo -image kiefm/spin-tools-dojo:localdev
         ;;
-    test|test-offline)
+    test|test-offline|offline)
         docker pull kiefm/spin-tools-dojo:latest
         dojo "./gojo test"
         ;;
-    test-online)
+    test-online|online-test|online-tests|online)
         docker pull kiefm/spin-tools-dojo:latest
-        dojo "./gojo test-online"
+        dojo -c Dojofile.no-localstack "./gojo test-online"
         ;;
     testdev)
         dojo -image kiefm/spin-tools-dojo:localdev "./gojo test"

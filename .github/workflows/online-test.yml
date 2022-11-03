@@ -22,13 +22,6 @@ jobs:
           chmod +x ./bin/dojo
           echo "./bin" >> $GITHUB_PATH
       -
-        name: Install docker-compose
-        run: |
-          wget --quiet -O ./bin/docker-compose https://github.com/docker/compose/releases/download/v2.10.0/docker-compose-linux-x86_64
-          chmod +x ./bin/docker-compose
-          mkdir -p ~/.docker/cli-plugins
-          cp ./bin/docker-compose ~/.docker/cli-plugins/
-      -
         name: Run online tests
         run: ./go test-online
         env:
