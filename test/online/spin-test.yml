@@ -1,0 +1,8 @@
+---
+verifier:
+  name: bats
+
+parameters:
+  aws_region: us-east-2
+  aws_access_key_id: $ENV=AWS_SANDBOX_ACCESS_KEY_ID
+  aws_secret_access_key: $ENV=AWS_SANDBOX_SECRET_ACCESS_KEY

@@ -22,11 +22,11 @@ do
 	case "$arg" in
 	test|test-offline|offline)
 		echo "Running offline tests"
-		time bats ./test/offline-tests
+		spin-test test/offline
 		;;
 	test-online|online-test|online-tests|online)
 		echo "Running online tests"
-		time bats ./test/online-tests
+		spin-test test/online
 		;;
 	help)
 	    >&2  echo ${USAGE}
