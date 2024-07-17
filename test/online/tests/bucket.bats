@@ -34,14 +34,12 @@ setup_file() {
     assert_success
 }
 
-
 @test "The hostname is found" {
     run host "${WEBSITE_HOSTNAME}"
     echo "command: $BATS_RUN_COMMAND"
     echo "output: $output"
     assert_success
 }
-
 
 @test "Can upload a page and then access it through the http endpoint and hostname" {
     S3_BUCKET_ENDPOINT=$(jq -r '.website_bucket_endpoint.value' ./_tmp/stack-output-values.json)
@@ -62,7 +60,6 @@ setup_file() {
     echo "output: $output"
     assert_output --partial "Hello there"
 }
-
 
 teardown_file() {
     test_out "Running stack-spin down to destroy the resources"
