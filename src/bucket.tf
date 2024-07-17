@@ -2,12 +2,6 @@
 resource "aws_s3_bucket" "website_bucket" {
   bucket = local.website_hostname
   force_destroy = true
-  timeouts {
-    create = "30s"
-    read   = "30s"
-    update = "30s"
-    delete = "30s"
-  }
 }
 
 resource "aws_s3_bucket_ownership_controls" "website_bucket" {
